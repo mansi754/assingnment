@@ -1,0 +1,215 @@
+#include <iostream>
+using namespace std;
+struct node {
+ int data;
+ node *next;
+};
+class linked_list {
+private:
+ node *head, *tail;
+public:
+ linked_list() {
+ head = NULL;
+ tail = NULL;
+ }
+ void createnode(int n) {
+ node *tmp = new node;
+ tmp->data = n;
+ tmp->next = NULL;
+ if (head == NULL) {
+ head = tmp;
+ tail = tmp;
+ } else {
+ tail->next = tmp;
+ tail = tail->next;
+ }
+ }
+ void display() {
+ node *tmp;
+ tmp = head;
+ if (tmp == NULL) {
+ cout << "List is empty!" << endl;
+ }
+ while (tmp != NULL) {
+ cout << tmp->data << " ";
+ tmp = tmp->next;
+ }
+ cout << endl;
+ }
+ void front() {
+ int n;
+ cout << "Enter the element to be inserted at the beginning: ";
+ cin >> n;
+ node *tmp = new node;
+ tmp->data = n;
+ tmp->next = head;
+ head = tmp;
+ }
+ void end() {
+ node *curr;
+ int n;
+ cout << "Enter the element to be inserted at the end: ";
+ cin >> n;
+ node *tmp = new node;
+ tmp->data = n;
+ tmp->next = NULL;
+ curr = head;
+ while (curr->next != NULL) {
+ curr = curr->next;
+ }
+ curr->next = tmp;
+ tail = tmp;
+ }
+ void mid() {
+ int n, loc;
+ cout << "Enter the element to be inserted: ";
+ cin >> n;
+ cout << "Enter location to be inserted: ";
+ cin >> loc;
+ node *tmp = new node;
+ node *curr;
+ curr = head;
+ for (int i = 1; i < loc; i++) {
+ curr = curr->next;
+ }
+ tmp->data = n;
+ tmp->next = curr->next;
+ curr->next = tmp;
+ }
+ void Search() {
+ int key;
+ cout << "Enter element to be found: ";
+ cin >> key;
+ int flag = 0;
+ node *tmp;
+ tmp = head;
+ while (tmp != NULL) {
+ if (tmp->data == key) {
+ cout << "Element found in the list!" << endl;
+ flag = 1;
+ break;
+ }
+ tmp = tmp->next;
+ }
+ if (flag == 0)
+ cout << "Element not present in the LinkedList" << endl;
+ }
+ 
+ void deleteFirst() {
+ if (head == NULL) {
+ cout << "List is already empty!" << endl;
+ return;
+ }
+ node *tmp = head;
+ head = head->next;
+ delete tmp;
+ cout << "First node deleted successfully." << endl;
+ }
+ void deleteLast() {
+ if (head == NULL) {
+ cout << "List is already empty!" << endl;
+ return;
+ }
+ if (head->next == NULL) { // If only one node is present
+ delete head;
+ head = NULL;
+ cout << "Last node deleted, list is now empty." << endl;
+ return;
+ }
+ node *curr = head;
+ while (curr->next->next != NULL) {
+ curr = curr->next;
+ }
+ delete curr->next;
+ curr->next = NULL;
+ tail = curr;
+ cout << "Last node deleted successfully." << endl;
+ }
+ 
+ void deleteAfter(int loc) {
+ if (head == NULL) {
+ cout << "List is empty!" << endl;
+ return;
+ }
+ node *curr = head;
+ for (int i = 1; i < loc; i++) {
+ if (curr->next == NULL) {
+ cout << "Location exceeds the size of the list!" << endl;
+ return;
+ }
+ curr = curr->next;
+ }
+ node *tmp = curr->next;
+ if (tmp == NULL) {
+ cout << "No node exists after the specified location!" << endl;
+ return;
+ }
+ curr->next = tmp->next;
+ delete tmp;
+ cout << "Node deleted successfully after location " << loc << "." << endl;
+ }
+};
+int main() {
+ linked_list a;
+ int n, b;
+ cout << "Enter the number of nodes: ";
+ cin >> n;
+ for (int i = 0; i < n; i++) {
+ cout << "Enter element " << i + 1 << " of the linked list: ";
+ cin >> b;
+ a.createnode(b);
+ }
+ int ch;
+ do {
+ cout << "\nMenu-Driven Code for Linked List" << endl;
+ cout << "1. Insert element at the beginning" << endl;
+ cout << "2. Insert element at the end" << endl;
+ cout << "3. Insert element in the middle" << endl;
+ cout << "4. Search element in the list" << endl;
+ cout << "5. Delete the first node" << endl;
+ cout << "6. Delete the last node" << endl;
+ cout << "7. Delete a node after a specific location" << endl;
+ cout << "8. Exit" << endl;
+ cout << "Enter your choice: ";
+ cin >> ch;
+ switch (ch) {
+ case 1:
+ a.front();
+ a.display();
+ break;
+ case 2:
+ a.end();
+ a.display();
+ break;
+ case 3:
+ a.mid();
+ a.display();
+ break;
+ case 4:
+ a.Search();
+ break;
+ case 5:
+ a.deleteFirst();
+ a.display();
+ break;
+ case 6:
+ a.deleteLast();
+ a.display();
+ break;
+ case 7: {
+ int loc;
+ cout << "Enter the location after which to delete: ";
+ cin >> loc;
+ a.deleteAfter(loc);
+ a.display();
+ break;
+ }
+ case 8:
+ cout << "Exiting..." << endl;
+ break;
+ default:
+ cout << "Please enter a valid choice." << endl;
+ }
+ } while (ch != 8);
+ return 0;
+}
